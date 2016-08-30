@@ -127,6 +127,11 @@ func ProcessSecret(client *api.Client, path string) Data {
 func ProcessExport(export string, data map[string]Data) {
 	exportParts := strings.SplitN(export, "=", 2)
 	exportKey := exportParts[0]
+	if len(os.Getenv(exportKey)) != 0 {
+		fmt.Println(fmt.Sprintf("# %s is already set, ignoring", exportKey))
+		return
+	}
+
 	path := exportParts[1]
 
 	parts := strings.Split(path, ".")
