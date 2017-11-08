@@ -39,7 +39,7 @@ func ProcessExport(export string, data map[string]Data) {
 	parts := strings.Split(path, ".")
 	m := data[parts[0]]
 	res := m[parts[1]]
-	fmt.Println(fmt.Sprintf("export %s=%s", exportKey, res))
+	fmt.Println(fmt.Sprintf("export %s=\"%s\"", exportKey, res))
 }
 
 func main() {
