@@ -14,8 +14,8 @@ type Data map[string]interface{}
 func ProcessSecret(client *api.Client, path string) Data {
 	secret, err := client.Logical().Read(path)
 	if err != nil {
-		fmt.Println("Failed to read secret")
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Failed to read secret")
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
 
@@ -47,7 +47,7 @@ func main() {
 	exports := flag.String("exports", "", "Comma separated list of export output")
 	flag.Parse()
 	if len(*secrets) < 1 {
-		fmt.Println("No secrets specified")
+		fmt.Fprintln(os.Stderr, "No secrets specified")
 		os.Exit(2)
 	}
 
@@ -55,7 +55,7 @@ func main() {
 
 	client, err := api.NewClient(config)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 

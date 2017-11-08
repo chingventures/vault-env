@@ -32,7 +32,7 @@ func login(c *api.Client, role string, pkcs7 string, nonce string) (string, erro
 	}
 
 	if resp != nil && resp.StatusCode == 404 {
-		fmt.Println("404")
+		fmt.Fprintln(os.Stderr, "404")
 		return "", nil
 	}
 
@@ -75,15 +75,15 @@ func ReadPKCS7() (string, error) {
 func NewClient(nonceFilename string) *api.Client {
 	nonce, err := ReadNonce(nonceFilename)
 	if err != nil {
-		fmt.Println("Can't read nonce")
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Can't read nonce")
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
 	pkcs7, err := ReadPKCS7()
 	if err != nil {
-		fmt.Println("Couldn't read PKCS7")
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Couldn't read PKCS7")
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
@@ -92,14 +92,14 @@ func NewClient(nonceFilename string) *api.Client {
 	client, err := api.NewClient(config)
 
 	if err != nil {
-		fmt.Println("Failed to initialise client")
+		fmt.Fprintln(os.Stderr, "Failed to initialise client")
 		os.Exit(1)
 	}
 
 	clientToken, err := login(client, "apps-role", pkcs7, nonce)
 	if err != nil {
-		fmt.Println("Login failed")
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Login failed")
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
 	client.SetToken(clientToken)
@@ -112,8 +112,8 @@ type Data map[string]interface{}
 func ProcessSecret(client *api.Client, path string) Data {
 	secret, err := client.Logical().Read(path)
 	if err != nil {
-		fmt.Println("Failed to read secret")
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Failed to read secret")
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
 
@@ -146,7 +146,7 @@ func main() {
 	nonceFilename := flag.String("nonce-filename", "", "Path to the file containing the vault nonce")
 	flag.Parse()
 	if len(*secrets) < 1 {
-		fmt.Println("No secrets specified")
+		fmt.Fprintln(os.Stderr, "No secrets specified")
 		os.Exit(2)
 	}
 
